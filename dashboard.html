@@ -45,6 +45,12 @@
 
   .empty{text-align:center;padding:30px 20px;color:var(--taupe);font-size:13px;}
   .cta-link{display:block;text-align:center;margin-top:28px;padding:14px;background:var(--brown);color:#fff;border-radius:8px;text-decoration:none;font-size:14px;letter-spacing:.05em;}
+  .quick-links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+  .quick-card{background:#fff;border-radius:12px;border:1px solid #ece4d8;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:5px;transition:box-shadow .15s;}
+  .quick-card:hover{box-shadow:0 2px 12px rgba(139,111,71,.1);}
+  .quick-icon{font-size:20px;}
+  .quick-title{font-size:13px;font-weight:500;color:var(--dark);}
+  .quick-sub{font-size:11px;color:var(--taupe);}
 </style>
 </head>
 <body>
@@ -87,6 +93,30 @@
   <div id="newList"><div class="empty">新規のお客様はまだいません</div></div>
 
   <a href="customer-form.html" class="cta-link" target="_blank">＋ 新しいアンケートを開く（お客様に共有）</a>
+
+  <div class="section-title" style="margin-top:28px;">Quick Menu クイックメニュー</div>
+  <div class="quick-links">
+    <a href="settings.html" class="quick-card">
+      <div class="quick-icon">⚙️</div>
+      <div class="quick-title">設定</div>
+      <div class="quick-sub">サロン名・パスワード変更</div>
+    </a>
+    <a href="settings.html#gas" class="quick-card">
+      <div class="quick-icon">📊</div>
+      <div class="quick-title">スプレッドシート連携</div>
+      <div class="quick-sub">GAS URLを設定する</div>
+    </a>
+    <a href="customer-form.html" class="quick-card" target="_blank">
+      <div class="quick-icon">📋</div>
+      <div class="quick-title">アンケートを開く</div>
+      <div class="quick-sub">お客様に見せるページ</div>
+    </a>
+    <a href="clients.html" class="quick-card">
+      <div class="quick-icon">👥</div>
+      <div class="quick-title">顧客一覧</div>
+      <div class="quick-sub">全顧客を検索・確認</div>
+    </a>
+  </div>
 </div>
 
 <script>
