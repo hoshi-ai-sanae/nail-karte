@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>カウンセリングシート | ネイルサロン</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+  :root {
+    --cream: #faf7f2;
+    --beige: #f0ebe0;
+    --taupe: #c9b99a;
+    --brown: #8b6f47;
+    --dark: #3d2b1a;
+    --pink: #e8c4c4;
+    --rose: #c9888a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); color: var(--dark); font-family: 'Noto Sans JP', sans-serif; font-weight: 300; min-height: 100vh; }
+
+  .hero {
+    background: linear-gradient(160deg, #f5ede0 0%, #ede0d4 60%, #e4d0c8 100%);
+    padding: 48px 24px 36px;
+    text-align: center;
+    border-bottom: 1px solid var(--taupe);
+  }
+  .hero-en { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; letter-spacing: .2em; color: var(--rose); margin-bottom: 10px; }
+  .hero h1 { font-size: 22px; font-weight: 400; letter-spacing: .08em; color: var(--dark); margin-bottom: 10px; }
+  .hero p { font-size: 12px; color: var(--brown); line-height: 1.8; }
+
+  form { max-width: 560px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  .section { margin-bottom: 36px; }
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 400; font-style: italic;
+    color: var(--brown); margin-bottom: 20px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--taupe);
+  }
+  .section-label span { font-family: 'Noto Sans JP', sans-serif; font-style: normal; font-size: 11px; font-weight: 400; color: var(--taupe); }
+
+  .field { margin-bottom: 18px; }
+  label { display: block; font-size: 12px; color: var(--brown); margin-bottom: 6px; letter-spacing: .05em; }
+  .req { color: var(--rose); margin-left: 3px; }
+
+  input[type=text], input[type=tel], input[type=date], input[type=url], select, textarea {
+    width: 100%; padding: 11px 14px;
+    border: 1px solid #ddd4c8; border-radius: 6px;
+    background: #fff; color: var(--dark);
+    font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 300;
+    outline: none; transition: border-color .2s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--rose); }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9888a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .checkbox-group, .radio-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .check-item, .radio-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border: 1px solid #ddd4c8; border-radius: 20px;
+    cursor: pointer; font-size: 13px; color: var(--dark);
+    background: #fff; transition: all .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .check-item input, .radio-item input { display: none; }
+  .check-item.active, .radio-item.active { border-color: var(--rose); background: #fdf0f0; color: var(--rose); }
+
+  .url-hint { font-size: 11px; color: var(--taupe); margin-top: 5px; }
+
+  .submit-btn {
+    width: 100%; padding: 16px;
+    background: var(--brown); color: #fff;
+    border: none; border-radius: 8px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 400; letter-spacing: .1em;
+    cursor: pointer; transition: background .2s;
+    margin-top: 24px;
+  }
+  .submit-btn:hover { background: var(--dark); }
+
+  .done-msg { display: none; text-align: center; padding: 60px 24px; }
+  .done-msg .icon { font-size: 40px; margin-bottom: 16px; }
+  .done-msg h2 { font-size: 20px; font-weight: 400; color: var(--brown); margin-bottom: 10px; }
+  .done-msg p { font-size: 13px; color: var(--taupe); line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-en">Nail Salon Counseling Sheet</div>
+  <h1>カウンセリングシート</h1>
+  <p>より良い施術のために<br>以下のご質問にお答えください</p>
+</div>
+
+<form id="mainForm">
+
+  <!-- 基本情報 -->
+  <div class="section">
+    <div class="section-label">Basic Info <span>基本情報</span></div>
+
+    <div class="field">
+      <label>お名前<span class="req">*</span></label>
+      <input type="text" id="name" placeholder="山田 花子" required>
+    </div>
+    <div class="field">
+      <label>お電話番号</label>
+      <input type="tel" id="phone" placeholder="090-0000-0000">
+    </div>
+    <div class="field">
+      <label>LINE ID / メールアドレス</label>
+      <input type="text" id="contact" placeholder="ご連絡先をご入力ください">
+    </div>
+    <div class="field">
+      <label>生年月日</label>
+      <input type="date" id="birthday">
+    </div>
+    <div class="field">
+      <label>来店のきっかけ</label>
+      <select id="howFound">
+        <option value="">選択してください</option>
+        <option>Instagram</option>
+        <option>友人・知人の紹介</option>
+        <option>Google検索</option>
+        <option>チラシ・看板</option>
+        <option>その他</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 爪の状態 -->
+  <div class="section">
+    <div class="section-label">Nail Condition <span>爪の状態</span></div>
+
+    <div class="field">
+      <label>爪の長さ</label>
+      <div class="radio-group" id="nailLength">
+        <label class="radio-item"><input type="radio" name="nailLength" value="短め"> 短め</label>
+        <label class="radio-item"><input type="radio" name="nailLength" value="普通"> 普通</label>
+        <label class="radio-item"><input type="radio" name="nailLength" value="長め"> 長め</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>爪の質・強さ</label>
+      <div class="radio-group" id="nailStrength">
+        <label class="radio-item"><input type="radio" name="nailStr" value="薄い・割れやすい"> 薄い・割れやすい</label>
+        <label class="radio-item"><input type="radio" name="nailStr" value="普通"> 普通</label>
+        <label class="radio-item"><input type="radio" name="nailStr" value="硬い"> 硬い</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>爪のお悩み（複数選択可）</label>
+      <div class="checkbox-group" id="nailConcerns">
+        <label class="check-item"><input type="checkbox" value="二枚爪"> 二枚爪</label>
+        <label class="check-item"><input type="checkbox" value="縦筋が気になる"> 縦筋</label>
+        <label class="check-item"><input type="checkbox" value="噛み爪"> 噛み爪</label>
+        <label class="check-item"><input type="checkbox" value="乾燥しやすい"> 乾燥しやすい</label>
+        <label class="check-item"><input type="checkbox" value="爪が浮きやすい"> 浮きやすい</label>
+        <label class="check-item"><input type="checkbox" value="特になし"> 特になし</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>現在のネイル状態</label>
+      <select id="currentNail">
+        <option value="">選択してください</option>
+        <option>地爪（ネイルなし）</option>
+        <option>ジェルネイル中</option>
+        <option>マニキュア中</option>
+        <option>オフしてから来店</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>アレルギー・肌への注意事項</label>
+      <textarea id="allergy" placeholder="金属アレルギー、敏感肌など、気になることがあればお書きください"></textarea>
+    </div>
+  </div>
+
+  <!-- 希望デザイン -->
+  <div class="section">
+    <div class="section-label">Design Request <span>希望デザイン</span></div>
+
+    <div class="field">
+      <label>今回のご希望メニュー<span class="req">*</span></label>
+      <select id="menu" required>
+        <option value="">選択してください</option>
+        <option>ジェルネイル</option>
+        <option>オフ</option>
+        <option>フットネイル</option>
+        <option>ハンドケア</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>好みのデザイン系統</label>
+      <div class="checkbox-group" id="designStyle">
+        <label class="check-item"><input type="checkbox" value="シンプル・ワンカラー"> シンプル</label>
+        <label class="check-item"><input type="checkbox" value="フレンチ"> フレンチ</label>
+        <label class="check-item"><input type="checkbox" value="ニュアンス・大人可愛い"> ニュアンス</label>
+        <label class="check-item"><input type="checkbox" value="キラキラ・派手め"> キラキラ</label>
+        <label class="check-item"><input type="checkbox" value="和柄・季節もの"> 季節もの</label>
+        <label class="check-item"><input type="checkbox" value="おまかせ"> おまかせ</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>生活スタイル</label>
+      <div class="checkbox-group" id="lifestyle">
+        <label class="check-item"><input type="checkbox" value="水仕事が多い"> 水仕事多め</label>
+        <label class="check-item"><input type="checkbox" value="デスクワーク"> デスクワーク</label>
+        <label class="check-item"><input type="checkbox" value="育児中"> 育児中</label>
+        <label class="check-item"><input type="checkbox" value="接客業"> 接客業</label>
+        <label class="check-item"><input type="checkbox" value="スポーツをよくする"> スポーツ</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>参考デザイン画像URL（インスタ・Pinterestなど）</label>
+      <input type="url" id="refImageUrl" placeholder="https://www.instagram.com/p/...">
+      <div class="url-hint">※ 参考にしたい投稿のURLをそのまま貼り付けてください（任意）</div>
+    </div>
+
+    <div class="field">
+      <label>その他ご要望・気になること</label>
+      <textarea id="notes" placeholder="ご自由にお書きください"></textarea>
+    </div>
+  </div>
+
+  <button type="submit" class="submit-btn">送信する</button>
+</form>
+
+<div class="done-msg" id="doneMsg">
+  <div class="icon">💅</div>
+  <h2>送信が完了しました</h2>
+  <p>ご記入ありがとうございます。<br>本日はどうぞよろしくお願いいたします。</p>
+</div>
+
+<script>
+  // ラジオ・チェックのビジュアル選択
+  document.querySelectorAll('.radio-item, .check-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const input = this.querySelector('input');
+      if (input.type === 'radio') {
+        this.closest('.radio-group').querySelectorAll('.radio-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        input.checked = true;
+      } else {
+        input.checked = !input.checked;
+        this.classList.toggle('active', input.checked);
+      }
+    });
+  });
+
+  document.getElementById('mainForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // チェックボックス取得ヘルパー
+    const getChecked = (groupId) => [...document.querySelectorAll(`#${groupId} input:checked`)].map(i => i.value).join('、');
+    const getRadio = (name) => { const r = document.querySelector(`input[name="${name}"]:checked`); return r ? r.value : ''; };
+
+    const data = {
+      id: 'c_' + Date.now(),
+      submittedAt: new Date().toLocaleString('ja-JP'),
+      name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      contact: document.getElementById('contact').value,
+      birthday: document.getElementById('birthday').value,
+      howFound: document.getElementById('howFound').value,
+      nailLength: getRadio('nailLength'),
+      nailStrength: getRadio('nailStr'),
+      nailConcerns: getChecked('nailConcerns'),
+      currentNail: document.getElementById('currentNail').value,
+      allergy: document.getElementById('allergy').value,
+      menu: document.getElementById('menu').value,
+      designStyle: getChecked('designStyle'),
+      lifestyle: getChecked('lifestyle'),
+      refImageUrl: document.getElementById('refImageUrl').value,
+      notes: document.getElementById('notes').value,
+      visitHistory: []
+    };
+
+    // 顧客リストに追加
+    const clients = JSON.parse(localStorage.getItem('nail_clients') || '[]');
+    clients.push(data);
+    localStorage.setItem('nail_clients', JSON.stringify(clients));
+
+    // GAS連携
+    const gasUrl = localStorage.getItem('nail_gas_url');
+    if (gasUrl) {
+      fetch(gasUrl, { method: 'POST', body: JSON.stringify({ type: 'new_client', data }) }).catch(() => {});
+    }
+
+    document.getElementById('mainForm').style.display = 'none';
+    document.getElementById('doneMsg').style.display = 'block';
+  });
+</script>
+</body>
+</html>

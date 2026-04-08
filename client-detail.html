@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>顧客詳細 | ネイルサロン管理</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
+  :root{--cream:#faf7f2;--beige:#f0ebe0;--taupe:#c9b99a;--brown:#8b6f47;--dark:#3d2b1a;--rose:#c9888a;--pink:#f5e6e6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);color:var(--dark);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;}
+  nav{background:#fff;border-bottom:1px solid #ece4d8;padding:0 20px;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:10;}
+  .back-btn{font-size:13px;color:var(--brown);background:none;border:none;cursor:pointer;padding:14px 0;font-family:'Noto Sans JP',sans-serif;}
+  .nav-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--rose);flex:1;text-align:center;}
+  .nav-placeholder{width:60px;}
+  .page{max-width:640px;margin:0 auto;padding:24px 20px 80px;}
+  .client-hero{background:#fff;border-radius:14px;padding:24px;margin-bottom:16px;border:1px solid #ece4d8;text-align:center;}
+  .client-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--beige));display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px;}
+  .client-name{font-size:20px;font-weight:400;color:var(--dark);}
+  .client-sub{font-size:12px;color:var(--taupe);margin-top:4px;}
+  .chips-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:12px;}
+  .chip{background:var(--beige);color:var(--brown);font-size:11px;padding:4px 12px;border-radius:20px;}
+  .chip-concern{background:var(--pink);color:var(--rose);}
+  .section{margin-bottom:20px;}
+  .section-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--brown);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--taupe);opacity:.4;}
+  .info-grid{background:#fff;border-radius:12px;border:1px solid #ece4d8;overflow:hidden;}
+  .info-row{display:flex;border-bottom:1px solid #f0ebe0;padding:11px 16px;}
+  .info-row:last-child{border-bottom:none;}
+  .info-key{font-size:12px;color:var(--taupe);width:120px;flex-shrink:0;padding-top:1px;}
+  .info-val{font-size:13px;color:var(--dark);}
+  .info-link{color:var(--rose);text-decoration:none;font-size:12px;}
+  .visit-card{background:#fff;border-radius:12px;border:1px solid #ece4d8;padding:16px;margin-bottom:10px;}
+  .visit-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .visit-date{font-size:13px;font-weight:500;color:var(--dark);}
+  .visit-menu{font-size:12px;padding:3px 10px;background:var(--beige);color:var(--brown);border-radius:20px;}
+  .visit-detail{font-size:12px;color:var(--taupe);line-height:1.9;}
+  .visit-insta{margin-top:8px;}
+  .insta-link{color:var(--rose);font-size:12px;text-decoration:none;}
+  .visit-del{font-size:11px;color:var(--taupe);background:none;border:none;cursor:pointer;margin-top:6px;}
+  .add-form{background:#fff;border-radius:12px;border:1px dashed var(--taupe);padding:20px;margin-bottom:16px;}
+  .add-form h3{font-size:14px;font-weight:500;color:var(--brown);margin-bottom:14px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:12px;color:var(--brown);margin-bottom:5px;}
+  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid #ddd4c8;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:13px;outline:none;}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--rose);}
+  .field textarea{min-height:60px;resize:vertical;}
+  .add-btn{background:var(--brown);color:#fff;border:none;border-radius:8px;padding:12px;width:100%;font-family:'Noto Sans JP',sans-serif;font-size:14px;cursor:pointer;}
+  .ai-box{background:linear-gradient(135deg,#fff8f5,#fff0f0);border:1px solid var(--pink);border-radius:12px;padding:20px;}
+  .ai-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+  .ai-icon{font-size:20px;}
+  .ai-title{font-size:14px;font-weight:500;color:var(--rose);}
+  .ai-content{font-size:13px;color:var(--dark);line-height:2;}
+  .ai-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--pink);}
+  .ai-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .ai-tag{background:var(--rose);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+  .empty-visit{text-align:center;padding:24px;color:var(--taupe);font-size:13px;}
+
+  /* ネイルチャート */
+  .chart-box{background:#fdf9f5;border:1px solid #ece4d8;border-radius:10px;padding:14px;margin-top:4px;}
+  .chart-tabs{display:flex;gap:8px;margin-bottom:14px;}
+  .chart-tab{flex:1;padding:8px;border:1px solid #ddd4c8;border-radius:8px;background:#fff;font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--taupe);cursor:pointer;transition:all .15s;}
+  .chart-tab.active{background:var(--brown);color:#fff;border-color:var(--brown);}
+  .palette-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+  .palette-label{font-size:11px;color:var(--taupe);white-space:nowrap;}
+  .swatch{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;flex-shrink:0;transition:transform .1s;}
+  .swatch.on{border-color:#5a3e28;transform:scale(1.18);}
+  .swatch-clear{background:#fff;border:2px dashed #ccc!important;}
+  .custom-wrap{width:24px;height:24px;border-radius:50%;border:2px solid #ddd4c8;overflow:hidden;flex-shrink:0;position:relative;}
+  .custom-wrap input{position:absolute;inset:-4px;width:calc(100%+8px);height:calc(100%+8px);cursor:pointer;border:none;padding:0;background:none;}
+  .nail-area{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .side-label{font-size:10px;color:var(--taupe);align-self:flex-start;}
+  .nail-row{display:flex;gap:8px;align-items:flex-end;}
+  .ng{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;}
+  .ng:active{opacity:.75;}
+  .ng .nl{font-size:9px;color:var(--taupe);}
+  .nd{width:5px;height:5px;border-radius:50%;background:var(--rose);opacity:0;}
+  .nd.show{opacity:1;}
+  .hint-txt{font-size:11px;color:var(--taupe);text-align:center;margin-top:6px;}
+
+  /* ポップアップ */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;}
+  .overlay.on{display:block;}
+  .popup{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:16px 16px 0 0;padding:20px 20px 36px;z-index:201;box-shadow:0 -4px 32px rgba(0,0,0,.14);}
+  .popup.on{display:block;}
+  .popup-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .popup-ttl{font-size:14px;font-weight:500;color:var(--dark);}
+  .popup-x{background:none;border:none;font-size:22px;color:var(--taupe);cursor:pointer;line-height:1;}
+  .popup-ta{width:100%;height:80px;padding:10px 12px;border:1px solid #ddd4c8;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:14px;resize:none;outline:none;}
+  .popup-ta:focus{border-color:var(--rose);}
+  .popup-ok{margin-top:10px;width:100%;padding:12px;background:var(--brown);color:#fff;border:none;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:14px;cursor:pointer;}
+
+  /* 履歴サムネ */
+  .chart-thumb{margin-top:10px;padding:10px;background:var(--beige);border-radius:8px;}
+  .thumb-ttl{font-size:11px;color:var(--brown);margin-bottom:6px;font-weight:500;}
+  .thumb-side{font-size:10px;color:var(--taupe);margin:4px 0 2px;}
+  .thumb-memos{font-size:11px;color:var(--taupe);margin-top:5px;line-height:1.8;}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="ov" onclick="closePopup()"></div>
+<div class="popup" id="pp">
+  <div class="popup-hd">
+    <div class="popup-ttl" id="ppTitle"></div>
+    <button class="popup-x" onclick="closePopup()">×</button>
+  </div>
+  <textarea class="popup-ta" id="ppMemo" placeholder="カラー名・パーツ・状態メモなど"></textarea>
+  <button class="popup-ok" onclick="saveMemo()">メモを保存</button>
+</div>
+
+<nav>
+  <button class="back-btn" onclick="history.back()">‹ 戻る</button>
+  <div class="nav-title">顧客詳細</div>
+  <div class="nav-placeholder"></div>
+</nav>
+
+<div class="page">
+  <div class="client-hero">
+    <div class="client-avatar">💅</div>
+    <div class="client-name" id="clientName">読み込み中...</div>
+    <div class="client-sub" id="clientSub"></div>
+    <div class="chips-row" id="clientChips"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Profile 基本情報</div>
+    <div class="info-grid" id="infoGrid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Nail Condition 爪の状態</div>
+    <div class="info-grid" id="nailGrid"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Visit Record 来店記録を追加</div>
+    <div class="add-form">
+      <h3>今回の施術を記録する</h3>
+      <div class="field"><label>施術日</label><input type="date" id="visitDate"></div>
+      <div class="field">
+        <label>施術メニュー</label>
+        <select id="visitMenu">
+          <option value="">選択してください</option>
+          <option>ジェルネイル</option><option>オフ</option>
+          <option>フットネイル</option><option>ハンドケア</option>
+        </select>
+      </div>
+      <div class="field"><label>施術写真（インスタURL）</label><input type="url" id="visitInsta" placeholder="https://www.instagram.com/p/..."></div>
+      <div class="field"><label>使用カラー・パーツ（全体）</label><input type="text" id="visitColor" placeholder="例：ミルキーホワイト、ゴールドラメ"></div>
+      <div class="field"><label>爪の状態メモ</label><textarea id="visitNailMemo" placeholder="当日の爪の様子"></textarea></div>
+      <div class="field"><label>次回提案メモ</label><textarea id="visitNextMemo" placeholder="次回おすすめしたいデザインなど"></textarea></div>
+
+      <!-- ネイルチャート -->
+      <div class="field">
+        <label>ネイルチャート（爪ごとにカラー＆メモ）</label>
+        <div class="chart-box">
+          <div class="chart-tabs">
+            <button class="chart-tab active" onclick="switchMode('hand',this)">手（ハンド）</button>
+            <button class="chart-tab" onclick="switchMode('foot',this)">足（フット）</button>
+          </div>
+          <div class="palette-row">
+            <span class="palette-label">カラー：</span>
+            <div class="swatch swatch-clear on" data-c="#ffffff" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#fce4ec" data-c="#fce4ec" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#f8bbd0" data-c="#f8bbd0" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#e06080" data-c="#e06080" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#8b2840" data-c="#8b2840" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#fdf3e3" data-c="#fdf3e3" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#d4a8c7" data-c="#d4a8c7" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#b0c4de" data-c="#b0c4de" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#a8d8a8" data-c="#a8d8a8" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#9e9e9e" data-c="#9e9e9e" onclick="pickSwatch(this)"></div>
+            <div class="swatch" style="background:#212121" data-c="#212121" onclick="pickSwatch(this)"></div>
+            <div class="custom-wrap" title="カスタムカラー">
+              <input type="color" id="cusColor" value="#ff9999" oninput="pickCustom(this.value)">
+            </div>
+          </div>
+          <div class="nail-area" id="nailArea"></div>
+          <div class="hint-txt">爪をタップ → カラーを塗ってメモを入力</div>
+        </div>
+      </div>
+
+      <div class="field"><label>全体メモ</label><textarea id="visitNotes" placeholder="全体の施術メモ・気になった点など"></textarea></div>
+      <button class="add-btn" onclick="addVisit()">記録を保存する</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">History 来店履歴</div>
+    <div id="visitList"><div class="empty-visit">来店記録がありません</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Nail Advice ネイルアドバイス</div>
+    <div class="ai-box">
+      <div class="ai-header"><span class="ai-icon">✨</span><span class="ai-title">このお客様へのおすすめアドバイス</span></div>
+      <div class="ai-content" id="aiContent">読み込み中...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+if(!sessionStorage.getItem('nail_logged_in')) location.href='login.html';
+
+const params = new URLSearchParams(location.search);
+const clientId = params.get('id');
+let clients = JSON.parse(localStorage.getItem('nail_clients')||'[]');
+let client = clients.find(c=>c.id===clientId);
+if(!client){ document.body.innerHTML='<p style="padding:40px;text-align:center;color:#999">お客様が見つかりません</p>'; }
+
+document.getElementById('visitDate').value = new Date().toISOString().split('T')[0];
+
+// ===== ネイルチャート =====
+const HL = ['親','人','中','薬','小'];
+// 手サイズ[親→小], 足サイズ[親→小]
+const HSZ = [{w:30,h:44},{w:24,h:40},{w:25,h:42},{w:23,h:38},{w:20,h:34}];
+const FSZ = [{w:36,h:50},{w:26,h:36},{w:22,h:32},{w:20,h:30},{w:18,h:28}];
+
+let mode = 'hand';
+let selColor = '#ffffff';
+let activeNail = null;
+
+// chartData[mode][side][finger] = {color, memo}
+let CD = {
+  hand:{ right:mk5(), left:mk5() },
+  foot:{ right:mk5(), left:mk5() }
+};
+function mk5(){ return Array.from({length:5},()=>({color:'#ffffff',memo:''})); }
+
+function nailD(w,h){
+  return `M 2,${h} L 2,${h*.55} Q 2,2 ${w/2},2 Q ${w-2},2 ${w-2},${h*.55} L ${w-2},${h} Z`;
+}
+
+function buildNailArea(){
+  const sz = mode==='hand'?HSZ:FSZ;
+  const area = document.getElementById('nailArea');
+  area.innerHTML='';
+
+  ['right','left'].forEach(side=>{
+    const lbl = document.createElement('div');
+    lbl.className='side-label';
+    lbl.textContent = side==='right'?(mode==='hand'?'右手':'右足'):(mode==='hand'?'左手':'左足');
+    area.appendChild(lbl);
+
+    const row = document.createElement('div');
+    row.className='nail-row';
+
+    // 右は親指が右端→インデックス逆順表示
+    const idxArr = side==='right'?[4,3,2,1,0]:[0,1,2,3,4];
+    idxArr.forEach(i=>{
+      const d = CD[mode][side][i];
+      const s = sz[i];
+      const fill = d.color==='grad'?'url(#ng)':d.color;
+
+      const g = document.createElement('div');
+      g.className='ng';
+      g.dataset.mode=mode; g.dataset.side=side; g.dataset.idx=i;
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('width',s.w); svg.setAttribute('height',s.h);
+      svg.setAttribute('viewBox',`0 0 ${s.w} ${s.h}`);
+
+      if(d.color==='grad'){
+        const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+        const grad=document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+        grad.id='ng'; grad.setAttribute('x1','0');grad.setAttribute('y1','0');grad.setAttribute('x2','1');grad.setAttribute('y2','1');
+        [['0%','#f8bbd0'],['50%','#d4a8c7'],['100%','#b0c4de']].forEach(([off,col])=>{
+          const st=document.createElementNS('http://www.w3.org/2000/svg','stop');
+          st.setAttribute('offset',off); st.setAttribute('stop-color',col); grad.appendChild(st);
+        });
+        defs.appendChild(grad); svg.appendChild(defs);
+      }
+
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d',nailD(s.w,s.h));
+      path.setAttribute('fill',fill);
+      path.setAttribute('stroke','#c0a88a');
+      path.setAttribute('stroke-width','1.2');
+      svg.appendChild(path);
+
+      const dot=document.createElement('div');
+      dot.className='nd'+(d.memo?' show':'');
+
+      const nl=document.createElement('div');
+      nl.className='nl';
+      nl.textContent=HL[i];
+
+      g.appendChild(svg); g.appendChild(dot); g.appendChild(nl);
+
+      g.addEventListener('click',()=>{
+        // カラーを即座に塗る
+        CD[mode][side][i].color = selColor;
+        // SVGのfillを直接更新
+        path.setAttribute('fill', selColor==='grad'?'url(#ng)':selColor);
+        // メモポップアップ
+        activeNail={mode,side,i};
+        document.getElementById('ppTitle').textContent =
+          `${mode==='hand'?'手':'足'} ${side==='right'?'右':'左'} ${HL[i]}指`;
+        document.getElementById('ppMemo').value = d.memo||'';
+        document.getElementById('pp').classList.add('on');
+        document.getElementById('ov').classList.add('on');
+        setTimeout(()=>document.getElementById('ppMemo').focus(),100);
+      });
+
+      row.appendChild(g);
+    });
+    area.appendChild(row);
+  });
+}
+
+function switchMode(m, btn){
+  mode=m;
+  document.querySelectorAll('.chart-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  buildNailArea();
+}
+
+function pickSwatch(el){
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('on'));
+  el.classList.add('on');
+  selColor=el.dataset.c;
+}
+function pickCustom(val){
+  selColor=val;
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('on'));
+}
+
+function closePopup(){
+  document.getElementById('pp').classList.remove('on');
+  document.getElementById('ov').classList.remove('on');
+  activeNail=null;
+}
+function saveMemo(){
+  if(!activeNail) return;
+  const {mode:m,side,i}=activeNail;
+  CD[m][side][i].memo=document.getElementById('ppMemo').value;
+  // ドット更新
+  const dots=document.querySelectorAll(`.ng[data-mode="${m}"][data-side="${side}"][data-idx="${i}"] .nd`);
+  dots.forEach(d=>d.classList.toggle('show',!!CD[m][side][i].memo));
+  closePopup();
+}
+
+function resetChart(){
+  CD={
+    hand:{right:mk5(),left:mk5()},
+    foot:{right:mk5(),left:mk5()}
+  };
+  buildNailArea();
+}
+
+// チャートサムネ（履歴表示用）
+function thumbHTML(chart){
+  if(!chart) return '';
+  const sz={hand:HSZ,foot:FSZ};
+  let h='<div class="chart-thumb"><div class="thumb-ttl">ネイルチャート</div>';
+  const memos=[];
+  ['hand','foot'].forEach(m=>{
+    const present=chart[m]&&(chart[m].right.some(d=>d.color!=='#ffffff')||chart[m].left.some(d=>d.color!=='#ffffff'));
+    if(!present) return;
+    ['right','left'].forEach(side=>{
+      const s=sz[m]; const arr=chart[m][side];
+      if(!arr.some(d=>d.color!=='#ffffff'||d.memo)) return;
+      h+=`<div class="thumb-side">${m==='hand'?'手':'足'}${side==='right'?'右':'左'}</div>`;
+      let totalW=arr.reduce((a,_,i)=>a+s[i].w+4,0);
+      let maxH=s[0].h;
+      h+=`<svg width="${totalW}" height="${maxH}" viewBox="0 0 ${totalW} ${maxH}">`;
+      let x=0;
+      (side==='right'?[4,3,2,1,0]:[0,1,2,3,4]).forEach(i=>{
+        const d=arr[i]; const ss=s[i];
+        const fill=d.color==='grad'?'#d4a8c7':d.color;
+        h+=`<path d="${nailD(ss.w,ss.h)}" fill="${fill}" stroke="#c0a88a" stroke-width="1" transform="translate(${x},${maxH-ss.h})"/>`;
+        x+=ss.w+4;
+      });
+      h+='</svg>';
+      arr.forEach((d,i)=>{ if(d.memo) memos.push(`${m==='hand'?'手':'足'}${side==='right'?'右':'左'}${HL[i]}: ${d.memo}`); });
+    });
+  });
+  if(memos.length) h+=`<div class="thumb-memos">${memos.join('<br>')}</div>`;
+  h+='</div>';
+  return h;
+}
+
+// ===== 顧客描画 =====
+function renderClient(){
+  const visits=client.visitHistory||[];
+  const lastDate=visits.length>0?visits[visits.length-1].date:'来店履歴なし';
+  document.getElementById('clientName').textContent=client.name+' 様';
+  document.getElementById('clientSub').textContent=`来店 ${visits.length}回 ｜ 最終: ${lastDate}`;
+  const concerns=(client.nailConcerns||'').split('、').filter(x=>x&&x!=='特になし');
+  document.getElementById('clientChips').innerHTML=
+    (client.menu?`<span class="chip">${client.menu}</span>`:'')+
+    (client.lifestyle?`<span class="chip">${client.lifestyle}</span>`:'')+
+    concerns.map(x=>`<span class="chip chip-concern">${x}</span>`).join('');
+
+  document.getElementById('infoGrid').innerHTML=[
+    ['お電話',client.phone||'未登録'],['連絡先',client.contact||'未登録'],
+    ['生年月日',client.birthday||'未登録'],['来店のきっかけ',client.howFound||'未登録'],
+    ['希望デザイン',client.designStyle||'未登録'],['生活スタイル',client.lifestyle||'未登録'],
+  ].map(([k,v])=>`<div class="info-row"><div class="info-key">${k}</div><div class="info-val">${v}</div></div>`).join('')+
+    (client.refImageUrl?`<div class="info-row"><div class="info-key">参考URL</div><div class="info-val"><a class="info-link" href="${client.refImageUrl}" target="_blank">🔗 デザインを見る</a></div></div>`:'');
+
+  document.getElementById('nailGrid').innerHTML=[
+    ['爪の長さ',client.nailLength||'未登録'],['爪の硬さ',client.nailStrength||'未登録'],
+    ['爪のお悩み',client.nailConcerns||'なし'],['現在の状態',client.currentNail||'未登録'],
+    ['アレルギー',client.allergy||'なし'],
+  ].map(([k,v])=>`<div class="info-row"><div class="info-key">${k}</div><div class="info-val">${v}</div></div>`).join('');
+
+  document.getElementById('visitList').innerHTML = visits.length>0?
+    [...visits].reverse().map((v,i)=>`
+      <div class="visit-card">
+        <div class="visit-header"><div class="visit-date">${v.date}</div><span class="visit-menu">${v.menu}</span></div>
+        <div class="visit-detail">
+          ${v.color?`🎨 カラー: ${v.color}<br>`:''}
+          ${v.nailMemo?`📋 爪メモ: ${v.nailMemo}<br>`:''}
+          ${v.nextMemo?`💡 次回提案: ${v.nextMemo}<br>`:''}
+          ${v.notes?`📝 全体メモ: ${v.notes}`:''}
+        </div>
+        ${thumbHTML(v.chart)}
+        ${v.instaUrl?`<div class="visit-insta"><a class="insta-link" href="${v.instaUrl}" target="_blank">📷 施術写真を見る（Instagram）</a></div>`:''}
+        <button class="visit-del" onclick="deleteVisit(${visits.length-1-i})">✕ この記録を削除</button>
+      </div>`).join(''):
+    '<div class="empty-visit">来店記録がありません</div>';
+
+  generateAdvice();
+}
+
+function generateAdvice(){
+  const concerns=client.nailConcerns||'', lifestyle=client.lifestyle||'';
+  const visits=client.visitHistory||[];
+  const lastVisit=visits.length>0?visits[visits.length-1]:null;
+  const advices=[];
+  if(concerns.includes('薄い')||concerns.includes('割れ'))
+    advices.push({tag:'ケア提案',text:'爪が薄く割れやすい状態です。ベースジェルで補強しながら施術することをおすすめします。毎日のキューティクルオイルケアも効果的です。'});
+  if(concerns.includes('二枚爪'))
+    advices.push({tag:'ケア提案',text:'二枚爪が気になるとのことです。ファイリングで整えつつ、ストレスポイントにジェルを塗布して保護する方法が効果的です。'});
+  if(concerns.includes('乾燥'))
+    advices.push({tag:'保湿ケア',text:'乾燥しやすい爪・お肌には爪周りへのオイルケアが効果的です。来店時にネイルオイルをご紹介させていただきますね。'});
+  if(concerns.includes('浮き'))
+    advices.push({tag:'施術メモ',text:'ジェルが浮きやすいとのことです。プレパレーションを丁寧に行い、油分・水分をしっかり除去してから施術します。'});
+  if(lifestyle.includes('水仕事'))
+    advices.push({tag:'生活スタイル',text:'水仕事が多いためジェルの持ちが短くなりやすい傾向があります。トップジェルを厚めに仕上げる施術と、ゴム手袋の活用をお声がけください。'});
+  if(lifestyle.includes('育児'))
+    advices.push({tag:'生活スタイル',text:'育児中は短め・シンプルなデザインが実用的です。フレンチやニュアンスネイルをご提案してみませんか？'});
+  if(lastVisit&&lastVisit.nextMemo)
+    advices.push({tag:'前回の提案',text:lastVisit.nextMemo});
+  if(visits.length>0){
+    const diff=Math.floor((new Date()-new Date(visits[visits.length-1].date))/(1000*60*60*24));
+    if(diff>=28) advices.push({tag:'来店フォロー',text:`前回の施術から約${diff}日が経過しています。LINEで一声かけてみましょう！`});
+  }
+  if(!advices.length)
+    advices.push({tag:'ご来店時',text:'初回ご来店ありがとうございます。カウンセリングシートをもとにお好みのデザインをご提案いたします。'});
+  document.getElementById('aiContent').innerHTML=advices.map(a=>
+    `<div class="ai-item"><span class="ai-tag">${a.tag}</span><span>${a.text}</span></div>`).join('');
+}
+
+function addVisit(){
+  const date=document.getElementById('visitDate').value;
+  const menu=document.getElementById('visitMenu').value;
+  if(!date||!menu){alert('施術日とメニューを選択してください');return;}
+  const record={
+    date,menu,
+    instaUrl:document.getElementById('visitInsta').value,
+    color:document.getElementById('visitColor').value,
+    nailMemo:document.getElementById('visitNailMemo').value,
+    nextMemo:document.getElementById('visitNextMemo').value,
+    notes:document.getElementById('visitNotes').value,
+    chart:JSON.parse(JSON.stringify(CD)),
+  };
+  if(!client.visitHistory) client.visitHistory=[];
+  client.visitHistory.push(record);
+  const idx=clients.findIndex(c=>c.id===clientId);
+  clients[idx]=client;
+  localStorage.setItem('nail_clients',JSON.stringify(clients));
+  const gasUrl=localStorage.getItem('nail_gas_url');
+  if(gasUrl) fetch(gasUrl,{method:'POST',body:JSON.stringify({type:'visit_record',clientId,record})}).catch(()=>{});
+  ['visitDate','visitMenu','visitInsta','visitColor','visitNailMemo','visitNextMemo','visitNotes'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.tagName==='SELECT'?el.selectedIndex=0:el.value=id==='visitDate'?new Date().toISOString().split('T')[0]:'';
+  });
+  resetChart();
+  renderClient();
+  alert('記録を保存しました 💅');
+}
+
+function deleteVisit(index){
+  if(!confirm('この記録を削除しますか？'))return;
+  client.visitHistory.splice(index,1);
+  const idx=clients.findIndex(c=>c.id===clientId);
+  clients[idx]=client;
+  localStorage.setItem('nail_clients',JSON.stringify(clients));
+  renderClient();
+}
+
+buildNailArea();
+renderClient();
+</script>
+</body>
+</html>

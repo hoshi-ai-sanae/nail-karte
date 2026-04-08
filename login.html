@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ログイン | ネイルサロン管理</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
+  :root { --cream:#faf7f2;--taupe:#c9b99a;--brown:#8b6f47;--dark:#3d2b1a;--rose:#c9888a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--cream); min-height:100vh; display:flex; align-items:center; justify-content:center; font-family:'Noto Sans JP',sans-serif; font-weight:300; }
+  .card { width:100%; max-width:360px; padding:48px 36px; background:#fff; border-radius:16px; box-shadow:0 4px 40px rgba(139,111,71,.1); margin:24px; }
+  .logo { text-align:center; margin-bottom:40px; }
+  .logo-en { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:13px; letter-spacing:.2em; color:var(--rose); }
+  .logo h1 { font-size:20px; font-weight:400; color:var(--dark); margin-top:8px; letter-spacing:.05em; }
+  .field { margin-bottom:18px; }
+  label { display:block; font-size:12px; color:var(--brown); margin-bottom:6px; }
+  input { width:100%; padding:12px 14px; border:1px solid #ddd4c8; border-radius:8px; font-family:'Noto Sans JP',sans-serif; font-size:14px; outline:none; transition:border-color .2s; }
+  input:focus { border-color:var(--rose); }
+  .btn { width:100%; padding:14px; background:var(--brown); color:#fff; border:none; border-radius:8px; font-family:'Noto Sans JP',sans-serif; font-size:15px; font-weight:400; letter-spacing:.1em; cursor:pointer; margin-top:8px; transition:background .2s; }
+  .btn:hover { background:var(--dark); }
+  .err { color:var(--rose); font-size:12px; text-align:center; margin-top:12px; display:none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-en">Nail Salon</div>
+    <h1>管理画面ログイン</h1>
+  </div>
+  <div class="field">
+    <label>パスワード</label>
+    <input type="password" id="pw" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')login()">
+  </div>
+  <button class="btn" onclick="login()">ログイン</button>
+  <div class="err" id="err">パスワードが違います</div>
+</div>
+<script>
+  if(sessionStorage.getItem('nail_logged_in')) location.href='dashboard.html';
+  function login(){
+    const pw = document.getElementById('pw').value;
+    const saved = localStorage.getItem('nail_password') || 'nail1234';
+    if(pw === saved){
+      sessionStorage.setItem('nail_logged_in','1');
+      location.href='dashboard.html';
+    } else {
+      document.getElementById('err').style.display='block';
+    }
+  }
+</script>
+</body>
+</html>

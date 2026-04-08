@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>設定 | ネイルサロン管理</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto Sans JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
+  :root{--cream:#faf7f2;--beige:#f0ebe0;--taupe:#c9b99a;--brown:#8b6f47;--dark:#3d2b1a;--rose:#c9888a;--pink:#f5e6e6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--cream);color:var(--dark);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;}
+
+  nav{background:#fff;border-bottom:1px solid #ece4d8;padding:0 20px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:10;}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--rose);padding:14px 0;flex:1;}
+  .nav-links{display:flex;gap:4px;}
+  .nav-links a{padding:14px 12px;font-size:12px;color:var(--taupe);text-decoration:none;transition:color .2s;}
+  .nav-links a.active,.nav-links a:hover{color:var(--brown);}
+  .nav-logout{font-size:12px;color:var(--taupe);background:none;border:none;cursor:pointer;padding:14px 0 14px 12px;}
+
+  .page{max-width:560px;margin:0 auto;padding:28px 20px 60px;}
+  .section{margin-bottom:32px;}
+  .section-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--brown);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--taupe);opacity:.4;}
+
+  .card{background:#fff;border-radius:12px;border:1px solid #ece4d8;overflow:hidden;margin-bottom:10px;}
+  .setting-row{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid #f0ebe0;}
+  .setting-row:last-child{border-bottom:none;}
+  .setting-label{font-size:13px;color:var(--dark);flex:1;}
+  .setting-sub{font-size:11px;color:var(--taupe);margin-top:2px;}
+  .setting-input{width:180px;padding:7px 10px;border:1px solid #ddd4c8;border-radius:6px;font-size:13px;font-family:'Noto Sans JP',sans-serif;outline:none;}
+  .setting-input:focus{border-color:var(--rose);}
+
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;color:var(--brown);margin-bottom:6px;}
+  .field input{width:100%;padding:11px 14px;border:1px solid #ddd4c8;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:14px;outline:none;}
+  .field input:focus{border-color:var(--rose);}
+  .hint{font-size:11px;color:var(--taupe);margin-top:5px;line-height:1.6;}
+
+  .save-btn{background:var(--brown);color:#fff;border:none;border-radius:8px;padding:12px 24px;font-family:'Noto Sans JP',sans-serif;font-size:14px;cursor:pointer;transition:background .2s;}
+  .save-btn:hover{background:var(--dark);}
+  .danger-btn{background:#fff;color:var(--rose);border:1px solid var(--rose);border-radius:8px;padding:12px 24px;font-family:'Noto Sans JP',sans-serif;font-size:14px;cursor:pointer;}
+
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 24px;border-radius:24px;font-size:13px;display:none;z-index:100;}
+
+  .gas-steps{background:var(--beige);border-radius:8px;padding:16px;font-size:12px;color:var(--brown);line-height:2;}
+  .gas-steps ol{padding-left:18px;}
+  .gas-steps code{background:#fff;padding:2px 6px;border-radius:4px;font-size:11px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Nail Salon</div>
+  <div class="nav-links">
+    <a href="dashboard.html">ホーム</a>
+    <a href="clients.html">顧客</a>
+    <a href="settings.html" class="active">設定</a>
+  </div>
+  <button class="nav-logout" onclick="logout()">ログアウト</button>
+</nav>
+
+<div class="page">
+
+  <!-- サロン情報 -->
+  <div class="section">
+    <div class="section-title">Salon Info サロン情報</div>
+    <div class="card">
+      <div class="setting-row">
+        <div><div class="setting-label">サロン名</div></div>
+        <input class="setting-input" id="salonName" type="text" placeholder="My Nail Salon">
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">ネイリスト名</div></div>
+        <input class="setting-input" id="nailistName" type="text" placeholder="山田 花子">
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveSalon()">保存する</button>
+  </div>
+
+  <!-- パスワード変更 -->
+  <div class="section">
+    <div class="section-title">Security セキュリティ</div>
+    <div class="field">
+      <label>ログインパスワード</label>
+      <input type="password" id="newPw" placeholder="新しいパスワードを入力">
+      <div class="hint">デフォルトは <code>nail1234</code> です。必ず変更してください。</div>
+    </div>
+    <div class="field">
+      <label>パスワード（確認）</label>
+      <input type="password" id="newPwConfirm" placeholder="もう一度入力">
+    </div>
+    <button class="save-btn" onclick="savePw()">パスワードを変更</button>
+  </div>
+
+  <!-- GAS連携 -->
+  <div class="section">
+    <div class="section-title">Google Sheets スプレッドシート連携</div>
+    <div class="field">
+      <label>Google Apps Script のURL</label>
+      <input type="url" id="gasUrl" placeholder="https://script.google.com/macros/s/...">
+      <div class="hint">Googleスプレッドシートに顧客データを自動記録できます（任意）</div>
+    </div>
+    <button class="save-btn" onclick="saveGas()">URLを保存</button>
+
+    <div class="gas-steps" style="margin-top:16px;">
+      <strong>設定手順</strong>
+      <ol>
+        <li>Googleスプレッドシートを新規作成</li>
+        <li>拡張機能 → Apps Script を開く</li>
+        <li>以下のコードを貼り付けてデプロイ</li>
+        <li>発行されたURLをここに貼る</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- データ管理 -->
+  <div class="section">
+    <div class="section-title">Data データ管理</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="save-btn" onclick="exportData()">📤 データをエクスポート（JSON）</button>
+      <button class="danger-btn" onclick="clearData()">🗑 全データを削除</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  if(!sessionStorage.getItem('nail_logged_in')) location.href='login.html';
+
+  // 保存済み値を読み込み
+  document.getElementById('salonName').value = localStorage.getItem('nail_salon_name') || '';
+  document.getElementById('nailistName').value = localStorage.getItem('nail_nailist_name') || '';
+  document.getElementById('gasUrl').value = localStorage.getItem('nail_gas_url') || '';
+
+  function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2200); }
+
+  function saveSalon(){
+    localStorage.setItem('nail_salon_name', document.getElementById('salonName').value);
+    localStorage.setItem('nail_nailist_name', document.getElementById('nailistName').value);
+    toast('サロン情報を保存しました ✓');
+  }
+
+  function savePw(){
+    const pw = document.getElementById('newPw').value;
+    const c = document.getElementById('newPwConfirm').value;
+    if(!pw){ alert('パスワードを入力してください'); return; }
+    if(pw !== c){ alert('パスワードが一致しません'); return; }
+    localStorage.setItem('nail_password', pw);
+    document.getElementById('newPw').value = '';
+    document.getElementById('newPwConfirm').value = '';
+    toast('パスワードを変更しました ✓');
+  }
+
+  function saveGas(){
+    localStorage.setItem('nail_gas_url', document.getElementById('gasUrl').value);
+    toast('GAS URLを保存しました ✓');
+  }
+
+  function exportData(){
+    const data = { clients: JSON.parse(localStorage.getItem('nail_clients')||'[]'), exportedAt: new Date().toLocaleString('ja-JP') };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'nail_clients_' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+  }
+
+  function clearData(){
+    if(!confirm('全顧客データを削除します。この操作は元に戻せません。')) return;
+    if(!confirm('本当に削除しますか？')) return;
+    localStorage.removeItem('nail_clients');
+    toast('データを削除しました');
+  }
+
+  function logout(){ sessionStorage.removeItem('nail_logged_in'); location.href='login.html'; }
+</script>
+</body>
+</html>
